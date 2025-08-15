@@ -7,6 +7,8 @@ import { BiSolidMessageSquareDots } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
 
 const Chat = () => {
+  const [ chatHistory, setChatHistory ] = useState(null)
+  const chatBodyRef = useRef(null)
   return (
     <div>
         <button>
@@ -23,6 +25,25 @@ const Chat = () => {
                 <button onClick={() => setShowChatbot(prev => !prev)}>
                     <MdKeyboardArrowDown className='d-arrow' />
                 </button>
+            </div>
+
+            {/* CHAT BODY */}
+            <div ref={chatBodyRef} >
+                <div>
+                    <RiRobot2Fill className='robot'/>
+                    <p className='message-text'>
+                        Hey there <br/> How can i help you?
+                    </p>
+                </div>
+
+                {/* RENDER THE CHAT HISTORY DYNAMICALLY */}
+                {chatHistory.map((chat, index) => (
+                    <ChatMessage key={index} chat={chat}/>
+                ))}
+            </div>
+
+            <div>
+                 <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse}/>
             </div>
         </div>
     </div>
