@@ -13,6 +13,18 @@ const Chat = () => {
             <span className='material-symbols-rounded'><BiSolidMessageSquareDots className='toggle-icon'/></span>
             <span className='material-symbols-rounded'><MdOutlineClose className='toggle-icon'/></span>
         </button>
+        <div>
+            {/* CHAT HEADER */}
+            <div className='chat-header'>
+                <div className='header-info'>
+                    <RiRobot2Fill className='robot'/>
+                    <h2 className='logo-text'>Chatbot</h2>
+                </div>
+                <button onClick={() => setShowChatbot(prev => !prev)}>
+                    <MdKeyboardArrowDown className='d-arrow' />
+                </button>
+            </div>
+        </div>
     </div>
   )
 }
