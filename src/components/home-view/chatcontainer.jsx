@@ -1,8 +1,11 @@
 import React from 'react'
 
 const ChatContainer = () => {
+  const { } = use
   return (
-    <div>chatcontainer</div>
+    <div>
+
+    </div>
   )
 }
 
