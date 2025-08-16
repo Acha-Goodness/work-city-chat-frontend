@@ -7,7 +7,7 @@ const HomeLayout = () => {
 
   return (
     <div className='flex flex-col bg-white overflow-hidden'>
-        <main className="flex flex-col w-full">
+        <main className="flex flex-col w-full bg-[black]">
             <Outlet/>
         </main>
     </div>
