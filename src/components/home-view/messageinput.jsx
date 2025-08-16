@@ -1,12 +1,14 @@
 import { useRef, useState } from 'react';
 import { sendMessages } from '@/store/chat-slice';
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch } from 'react-redux';
 
 
 const MessageInput = () => {
   const [ text, setText ] = useState("");
   const [ imagePreview, setImagePreview ] = useState(null);
   const fileInputRef = useRef(null)
+  const dispatch = useDispatch();
 
   const handleImageChange = () => {
     const file = e.target.files[0];
@@ -28,7 +30,18 @@ const MessageInput = () => {
   }
 
   const handleSendMessage = async(e) => {
+    e.preventDefault();
+    if (!text.trim() && !imagePreview) return;
 
+    dispatch(sendMessages({text: text.trim(), image: imagePreview}))
+    .then((res) => {
+    // Clear form
+    setText("");
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    }).catch((err) => {
+        console.error("Failed to send message:", err);
+    })   
   }
   
   return (
