@@ -39,6 +39,21 @@ export const getMessages = createAsyncThunk("/chat/getMessages",
     }
 );
 
+export const sendMessages = createAsyncThunk("/chat/sendMessages",
+    async(messageData, {rejectWithValue}) => {
+        try{
+            const response = await axios.get(`http://localhost:3000/api/v1/msg/send/${state.selectedUser._id}`, messageData, {
+                withCredentials : true
+            });
+            return response.data;
+        }catch (err) {
+            const message =
+            err.response?.data?.message || "Something went wrong";
+            return rejectWithValue(message);
+        }
+    }
+);
+
 
 const chatSlice = createSlice({
     name: "chat",
