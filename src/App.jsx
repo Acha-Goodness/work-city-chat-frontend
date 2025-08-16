@@ -16,6 +16,10 @@ import { toast } from "sonner";
 import { MoonLoader } from 'react-spinners';
 import { Skeleton } from "@/components/ui/skeleton"
 import logo from "./assets/logo.png";
+import HomeLayout from "./components/home-view/layout";
+import Home from "./pages/main/home";
+import NavBar from "./components/Nav/navbar";
+import Profile from "./pages/main/profile-page";
 
 function App() {
   const { user, isAuthenticated, isLoading} = useSelector( (state) => state.auth)
@@ -53,10 +57,7 @@ function App() {
       (
         <div className="flex flex-col overflow-hidden bg-white">
           {/* COMMON COMPONENT */}
-          {/* {
-            location.pathname.includes("auth") ? <></> :
-            <Header/>
-          } */}
+          <NavBar/>
           <Routes>
               <Route path="/auth" element={
                 <CheckAuth isAuthenticated={isAuthenticated} user={user}>
@@ -68,6 +69,14 @@ function App() {
                   <Route path="verifyOtp" element={<VerifyOtp/>}/>
                   <Route path="forgotPassword" element={<ForgotPass/>}/>
                   <Route path="resetPassword" element={<ResetPass/>}/>
+              </Route>
+                <Route path="/" element={
+                <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                  <HomeLayout/>
+                </CheckAuth>
+                }>
+                  <Route path="home" element={<Home/>}/>
+                  <Route path="profile" element={<Profile/>}/>
               </Route>
               <Route path="/unauth-page" element={<UnauthPage/>}/>
               <Route path="*" element={<NotFound/>}/>
