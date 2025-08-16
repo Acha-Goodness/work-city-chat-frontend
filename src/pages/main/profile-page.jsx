@@ -7,8 +7,21 @@ import { IoMdMail } from "react-icons/io";
 const Profile = () => {
   const { user } = useSelector(state => state.auth);
   const [ isUpdatingProfile, setIsUpdating ] = useState(false);
-  const handleImageUpload = async(e) => {
+  const [ selectedImage, setSelectedImage ] = useState(null);
 
+  const handleImageUpload = async(e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = async () => {
+        const base641Image = reader.result;
+        setSelectedImage(base641Image);
+        // await updateProfile({ profilePic: base641Image})
+    }
   }
 
   return (
@@ -22,7 +35,7 @@ const Profile = () => {
                 {/* AVATAR UPLOAD SECTION */}
                 <div className='flex flex-col items-center gap-4'>
                     <div className='relative'>
-                        <img src={user.profilePic || <FaDrupal />} alt="profile" className='size-32 rounded-full object-cover border-4'/>
+                        <img src={selectedImage || user.profilePic || <FaDrupal />} alt="profile" className='size-32 rounded-full object-cover border-4'/>
                         <label
                             htmlFor="avatar-upload"
                             className='absolute bottom-0 right-0 bg-[grey] hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200'
@@ -55,10 +68,12 @@ const Profile = () => {
                     <h2 className='text-lg font-medium mb-4'>Account Information</h2>
                     <div className='space-y-3 text-sm'>
                         <div className='flex items-center justify-between py-2 border-b border-zinc-700'>
-                            <span></span>
+                            <span>Member Since</span>
+                            <span>1948</span>
                         </div>
-                        <div>
-
+                        <div className='flex items-center justify-between py-2'>
+                            <span>Account Status</span>
+                            <span className='text-green-500'>Active</span>
                         </div>
                     </div>
                 </div>
