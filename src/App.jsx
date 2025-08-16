@@ -70,7 +70,7 @@ function App() {
                   <Route path="forgotPassword" element={<ForgotPass/>}/>
                   <Route path="resetPassword" element={<ResetPass/>}/>
               </Route>
-                <Route path="/" element={
+                <Route path="/chat" element={
                 <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                   <HomeLayout/>
                 </CheckAuth>

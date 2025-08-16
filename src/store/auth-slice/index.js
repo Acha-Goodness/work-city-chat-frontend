@@ -5,7 +5,8 @@ const initialState = {
     isAuthenticated : false,
     isLoading : true,
     user : null,
-    error: null
+    error: null,
+    onlineUsers: []
 };
 
 export const registerUser = createAsyncThunk("/auth/register",
@@ -26,7 +27,9 @@ export const registerUser = createAsyncThunk("/auth/register",
 export const verifyOtp = createAsyncThunk("/auth/verifyOtp",
     async(otp, { rejectWithValue }) => {
         try{
-            const response = await axios.post("http://localhost:3000/api/v1/users/userVerifyOTP", {otp});
+            const response = await axios.post("http://localhost:3000/api/v1/users/userVerifyOTP", {otp}, {
+                withCredentials : true
+            });
             return response.data;
         }catch (err) {
             const message =

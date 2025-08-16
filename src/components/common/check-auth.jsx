@@ -10,7 +10,7 @@ const CheckAuth = ({ isAuthenticated, user, children}) => {
 
   if(isAuthenticated && (location.pathname.includes("auth"))){
     if(user?.user?.role === "user"){
-        return <Navigate to="/home"/>
+        return <Navigate to="/chat/home"/>
     }
   }
 

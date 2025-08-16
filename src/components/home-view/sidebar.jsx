@@ -1,21 +1,24 @@
 import { useEffect } from 'react';
-import { getUser } from '@/store/chat-slice';
+import { getUsers } from '@/store/chat-slice';
 import { useDispatch, useSelector } from 'react-redux';
 import SidebarSkeleton from './sidebarskeleton';
 import { FaUserSecret } from "react-icons/fa6";
+import profile from "../../assets/profile.png";
+import { GridLoader } from 'react-spinners';
 
 const SideBar = () => {
   const { users, selectedUser, isUsersLoading } = useSelector( state => state.chat);
+  const { onlineUsers } = useSelector( state => state.auth)
   const dispatch = useDispatch();
-  
-  const onlineUsers = [];
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(getUsers())
+    .then( res => {
+        console.log(res)
+    });
   }, [dispatch]);
 
-  if(isUsersLoading) return <SidebarSkeleton/>
-
+users && console.log(users)
   return (
     <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>
         <div className='border-b border-base-300 w-full p-5'>
@@ -26,16 +29,20 @@ const SideBar = () => {
             {/* TOD:  online filter toggle */}
         </div>
         <div className='overflow-y-auto w-full py-3'>
-            {
-                users.map((user) => {
+            { isUsersLoading ? 
+                <div className="text-center">
+                    <GridLoader color="#0d6bedff"/> 
+                </div>
+                :
+                users?.map((user) => (
                     <button 
                         key={user._id} 
-                        onClick={() => setSelectedUser(user)} 
+                        // onClick={() => setSelectedUser(user)} 
                         className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}`}
                     >
                         <div className='relative mx-auto lg:mx-0'>
                             <img
-                                src={user.profilePic || "AVATAR"}
+                                src={user.profilePic || profile}
                                 alt={user.name}
                                 className='size-12 object-cover rounded-full'    
                             />
@@ -54,7 +61,7 @@ const SideBar = () => {
                             </div>
                         </div>
                     </button>
-                })
+                ))
             }
         </div>
     </aside>

@@ -9,13 +9,13 @@ const initialState = {
     isMessagesLoading: false,
 };
 
-export const getUser = createAsyncThunk("/auth/resetPassword",
-    async(formData, { rejectWithValue }) => {
+export const getUsers = createAsyncThunk("/chat/getUsers",
+    async(_,{ rejectWithValue }) => {
         try{
-            const response = await axios.get("http://localhost:3000/api/v1/users/userResetPassword", formData, {
+            const response = await axios.get(`http://localhost:3000/api/v1/msg/users`, {
                 withCredentials : true
             });
-            return response.data
+            return response.data;
         }catch (err) {
             const message =
             err.response?.data?.message || "Something went wrong";
@@ -24,13 +24,13 @@ export const getUser = createAsyncThunk("/auth/resetPassword",
     }
 );
 
-export const getMessages = createAsyncThunk("/auth/resetPassword",
-    async(formData, { rejectWithValue }) => {
+export const getMessages = createAsyncThunk("/chat/getMessages",
+    async(id, { rejectWithValue }) => {
         try{
-            const response = await axios.get("http://localhost:3000/api/v1/users/userResetPassword", formData, {
+            const response = await axios.get(`http://localhost:3000/api/v1/msg/${id}`, {
                 withCredentials : true
             });
-            return response.data
+            return response.data;
         }catch (err) {
             const message =
             err.response?.data?.message || "Something went wrong";
@@ -46,7 +46,23 @@ const chatSlice = createSlice({
         setChat: (state, action) => {}
     },
     extraReducers: (builder) => {
-
+        builder.addCase(getUsers.pending, (state) => {
+            state.isUsersLoading = true
+        }).addCase(getUsers.fulfilled, (state, action) => {
+            state.isUsersLoading = false,
+            state.users = action.payload.users
+        }).addCase(getUsers.rejected, (state) => {
+            state.isUsersLoading = false,
+            state.users = []
+        }).addCase(getMessages.pending, (state) => {
+            state.isMessagesLoading = true
+        }).addCase(getMessages.fulfilled, (state, action) => {
+            state.isMessagesLoading = false,
+            state.messages = action.payload.data
+        }).addCase(getMessages.rejected, (state) => {
+            state.isMessagesLoading = false,
+            state.messages = []
+        })
     }
 })
 
