@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { getUsers } from '@/store/chat-slice';
+import { getUsers, setSelectedUser } from '@/store/chat-slice';
 import { useDispatch, useSelector } from 'react-redux';
-import SidebarSkeleton from './sidebarskeleton';
 import { FaUserSecret } from "react-icons/fa6";
 import profile from "../../assets/profile.png";
 import { GridLoader } from 'react-spinners';
+import SidebarSkeleton from './sidebarskeleton';
 
 const SideBar = () => {
   const { users, selectedUser, isUsersLoading } = useSelector( state => state.chat);
@@ -18,7 +18,6 @@ const SideBar = () => {
     });
   }, [dispatch]);
 
-users && console.log(users)
   return (
     <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>
         <div className='border-b border-base-300 w-full p-5'>
@@ -30,15 +29,13 @@ users && console.log(users)
         </div>
         <div className='overflow-y-auto w-full py-3'>
             { isUsersLoading ? 
-                <div className="text-center">
-                    <GridLoader color="#0d6bedff"/> 
-                </div>
+                <SidebarSkeleton/>
                 :
                 users?.map((user) => (
                     <button 
                         key={user._id} 
-                        // onClick={() => setSelectedUser(user)} 
-                        className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}`}
+                        onClick={() => dispatch(setSelectedUser(user))} 
+                        className={`w-full p-3 flex items-center gap-3 hover:bg-[#eaf3ffff] transition-colors ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}`}
                     >
                         <div className='relative mx-auto lg:mx-0'>
                             <img

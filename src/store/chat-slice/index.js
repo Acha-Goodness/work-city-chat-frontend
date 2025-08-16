@@ -4,7 +4,7 @@ import axios from "axios";
 const initialState = {
     messages: [],
     users: [],
-    selectedUser: null,
+    o: null,
     isUsersLoading: false,
     isMessagesLoading: false,
 };
@@ -39,11 +39,15 @@ export const getMessages = createAsyncThunk("/chat/getMessages",
     }
 );
 
+
 const chatSlice = createSlice({
     name: "chat",
     initialState,
-    reducer:{
-        setChat: (state, action) => {}
+    reducers:{
+        setChat: (state, action) => {},
+        setSelectedUser: (state, action) => {
+            state.selectedUser = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getUsers.pending, (state) => {
@@ -66,4 +70,5 @@ const chatSlice = createSlice({
     }
 })
 
+export const { setSelectedUser } = chatSlice.actions;
 export default chatSlice.reducer;
