@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { sendMessages } from '@/store/chat-slice';
+import { RxCross2 } from "react-icons/rx";
 
 
 const MessageInput = () => {
@@ -8,7 +9,17 @@ const MessageInput = () => {
   const fileInputRef = useRef(null)
 
   const handleImageChange = () => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
 
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
   }
   
   const removeImage = () => {
@@ -35,7 +46,7 @@ const MessageInput = () => {
               flex items-center justify-center"
               type="button"
             >
-              <X className="size-3" />
+              <RxCross2 className="size-3" />
             </button>
           </div>
         </div>
