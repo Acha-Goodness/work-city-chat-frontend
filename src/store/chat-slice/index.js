@@ -4,7 +4,7 @@ import axios from "axios";
 const initialState = {
     messages: [],
     users: [],
-    o: null,
+    selectedUser: null,
     isUsersLoading: false,
     isMessagesLoading: false,
 };
@@ -40,9 +40,12 @@ export const getMessages = createAsyncThunk("/chat/getMessages",
 );
 
 export const sendMessages = createAsyncThunk("/chat/sendMessages",
-    async(messageData, {rejectWithValue}) => {
+    async(messageData, {rejectWithValue, getState}) => {
         try{
-            const response = await axios.get(`http://localhost:3000/api/v1/msg/send/${state.selectedUser._id}`, messageData, {
+            const state = getState();
+            const { selectedUser } = state.chat;
+            
+            const response = await axios.post(`http://localhost:3000/api/v1/msg/send/${selectedUser._id}`, messageData, {
                 withCredentials : true
             });
             return response.data;

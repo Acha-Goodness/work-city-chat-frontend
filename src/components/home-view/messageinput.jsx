@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { sendMessages } from '@/store/chat-slice';
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch } from 'react-redux';
+import { IoIosSend } from "react-icons/io";
+import { MdImage } from "react-icons/md";
 
 
 const MessageInput = () => {
@@ -10,7 +12,7 @@ const MessageInput = () => {
   const fileInputRef = useRef(null)
   const dispatch = useDispatch();
 
-  const handleImageChange = () => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
@@ -35,9 +37,9 @@ const MessageInput = () => {
 
     dispatch(sendMessages({text: text.trim(), image: imagePreview}))
     .then((res) => {
-    // Clear form
-    setText("");
-    setImagePreview(null);
+      console.log(res)
+      setText("");
+      setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     }).catch((err) => {
         console.error("Failed to send message:", err);
@@ -56,11 +58,11 @@ const MessageInput = () => {
             />
             <button
               onClick={removeImage}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
+              className="absolute -top-1 -right-1.5 w-4 h-4 rounded-full bg-black
               flex items-center justify-center"
               type="button"
             >
-              <RxCross2 className="size-3" />
+              <RxCross2 className="size-10 text-bold text-white" />
             </button>
           </div>
         </div>
@@ -70,7 +72,7 @@ const MessageInput = () => {
         <div className="flex-1 flex gap-2">
           <input
             type="text"
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
+            className="w-full input input-bordered p-[0.3%] rounded-lg input-sm sm:input-md bg-[#9ad2ffff]"
             placeholder="Type a message..."
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -89,7 +91,7 @@ const MessageInput = () => {
                      ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
-            <Image size={20} />
+            <MdImage size={20}/>
           </button>
         </div>
         <button
@@ -97,7 +99,7 @@ const MessageInput = () => {
           className="btn btn-sm btn-circle"
           disabled={!text.trim() && !imagePreview}
         >
-          <Send size={22} />
+          <IoIosSend size={22} />
         </button>
       </form>
     </div>
