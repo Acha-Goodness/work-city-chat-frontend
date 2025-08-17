@@ -1,13 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { io } from "socket.io-client";
+
+const BASE_URL = "http://localhost:3000"
 
 const initialState = {
     isAuthenticated : false,
     isLoading : true,
     user : null,
     error: null,
-    onlineUsers: []
+    onlineUsers: [],
+    socket: null
 };
+
+const connectSocket = () => {
+    const socket = io(BASE_URL);
+    socket.connect()
+}
+
+const disconnectSocket = () => {
+
+}
 
 export const registerUser = createAsyncThunk("/auth/register",
     async(formData, { rejectWithValue }) => {
@@ -30,6 +43,7 @@ export const verifyOtp = createAsyncThunk("/auth/verifyOtp",
             const response = await axios.post("http://localhost:3000/api/v1/users/userVerifyOTP", {otp}, {
                 withCredentials : true
             });
+            connectSocket();
             return response.data;
         }catch (err) {
             const message =
@@ -45,6 +59,7 @@ export const login = createAsyncThunk("/auth/login",
             const response = await axios.post("http://localhost:3000/api/v1/users/userLogin", formData, {
                 withCredentials : true
             });
+            connectSocket();
             return response.data
         }catch (err) {
             const message =
@@ -94,6 +109,7 @@ export const checkAuth = createAsyncThunk("/auth/checkauth",
                     // Expires : "0"
                 }
             });
+            connectSocket();
             return response.data
         }catch (err) {
             const message =
@@ -109,6 +125,7 @@ export const logout = createAsyncThunk("/auth/logout",
             const response = await axios.post("http://localhost:3000/api/v1/users/logout",{}, {
                 withCredentials : true
             });
+            disconnectSocket();
             return response.data
         }catch (err) {
             const message =
