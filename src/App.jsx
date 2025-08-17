@@ -42,7 +42,7 @@ function App() {
     }).catch((err) => {
       toast(err.message)
     })
-  }, [dispatch]);
+  }, []);
 
 
   return (

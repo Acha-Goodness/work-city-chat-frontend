@@ -10,8 +10,7 @@ import { formatMessageTime } from '@/lib/utils';
 const ChatContainer = () => {
   const { messages, isMessagesLoading, selectedUser } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.auth)
-  console.log("User", user)
-   console.log("Messages", messages)
+
   const dispatch = useDispatch();
 
   useEffect(() => {

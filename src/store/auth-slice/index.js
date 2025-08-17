@@ -13,20 +13,31 @@ const initialState = {
     socket: null
 };
 
-const connectSocket = ({ getState }) => {
-  const state = getState();
+const connectSocket = () => ({dispatch, getState}) => {
+  const state = getState()
+  console.log("STATE: ", state)
+//   if (!user?.user._id) return;
+
   const socket = io(BASE_URL, {
     withCredentials: true,
-    query: {
-        userId: state.user._id
-    }
+    // query: { userId: user.user._id },
   });
 
   socket.on("getOnlineUsers", (userIds) => {
-    state.onlineUsers = userIds;
-  })
+    dispatch(setOnlineUsers(userIds));
+  });
+
   return socket;
 };
+
+const disconnectSocket = () => (dispatch, getState) => {
+  const { socket } = getState().auth;
+  if (socket) {
+    socket.disconnect();
+    dispatch(clearSocket());
+  }
+};
+
 
 export const registerUser = createAsyncThunk("/auth/register",
     async(formData, { rejectWithValue }) => {
@@ -140,11 +151,13 @@ export const logout = createAsyncThunk("/auth/logout",
 const authSlice = createSlice({
     name : "auth",
     initialState,
-    reducer  : {
-        setUser: (state, action) => {},
-
+    reducers : {
         setSocket: (state, action) => {
           state.socket = action.payload;
+        },
+
+        setOnlineUsers: (state, action) => {
+          state.onlineUsers = action.payload;
         },
 
        clearSocket: (state) => {
@@ -220,8 +233,8 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = action.payload.status;
-            // const socket = connectSocket();
-            // state.socket = socket;
+            const socket = connectSocket();
+            state.socket = socket;
         }).addCase(checkAuth.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
@@ -231,10 +244,8 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = null;
             state.isAuthenticated = false;
-            if (state.socket) {
-                state.socket.disconnect();
-                state.socket = null;
-            }
+            const socket = disconnectSocket();
+            state.socket = socket;
         })
     }
 })
