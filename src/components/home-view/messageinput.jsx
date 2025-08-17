@@ -39,7 +39,7 @@ const MessageInput = () => {
 
     dispatch(sendMessages({text: text.trim(), image: imagePreview}))
     .then((res) => {
-      dispatch(getMessages(selectedUser._id));
+      // dispatch(getMessages(selectedUser._id));
       // console.log(res)
       setText("");
       setImagePreview(null);

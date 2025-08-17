@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 
-const { socket } = useSelector((state) => state.auth)
+// const { socket } = useSelector((state) => state.auth)
 
 const initialState = {
     messages: [],
@@ -61,7 +61,6 @@ export const sendMessages = createAsyncThunk("/chat/sendMessages",
     }
 );
 
-
 const chatSlice = createSlice({
     name: "chat",
     initialState,
@@ -72,19 +71,9 @@ const chatSlice = createSlice({
             state.selectedUser = action.payload;
         },
 
-        subcribeToMessages: (state, action) => {
-            if(!state.selectedUser) return;
-            const sock = socket;
-
-            sock.on("newMessage", (newMessage) => {
-                state.messages = [...state.messages, newMessage]
-            })
+        addMessage: (state, action) => {
+            state.messages.push(action.payload);
         },
-
-        unsubcribeToMessages: (state, action) => {
-            const sock = socket;
-            sock.off("newMessage"); 
-        }
     },
     extraReducers: (builder) => {
         builder.addCase(getUsers.pending, (state) => {
@@ -107,5 +96,30 @@ const chatSlice = createSlice({
     }
 })
 
-export const { setSelectedUser, subcribeToMessages, unsubcribeToMessages } = chatSlice.actions;
+export const { setSelectedUser,  addMessage } = chatSlice.actions;
 export default chatSlice.reducer;
+
+export const subscribeToMessages = createAsyncThunk(
+  "chat/subscribeToMessages",
+  async (_, { getState, dispatch }) => {
+    const socket = getState().auth.socket;
+    const selectedUser = getState().chat.selectedUser;
+
+    if (!socket || !selectedUser) return;
+
+    socket.on("newMessage", (newMessage) => {
+      dispatch(addMessage(newMessage));
+    });
+  }
+);
+
+export const unsubscribeFromMessages = createAsyncThunk(
+  "chat/unsubscribeFromMessages",
+  async (_, { getState }) => {
+    const socket = getState().auth.socket;
+
+    if (socket) {
+      socket.off("newMessage");
+    }
+  }
+);

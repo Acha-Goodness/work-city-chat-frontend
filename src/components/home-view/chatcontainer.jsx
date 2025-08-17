@@ -1,4 +1,4 @@
-import { getMessages } from '@/store/chat-slice';
+import { getMessages, subscribeToMessages, unsubscribeFromMessages } from '@/store/chat-slice';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import ChatHeader from './chatheader';
@@ -12,9 +12,13 @@ const ChatContainer = () => {
   const { user } = useSelector((state) => state.auth)
 
   const dispatch = useDispatch();
+  
 
   useEffect(() => {
-    dispatch(getMessages(selectedUser._id))
+    dispatch(getMessages(selectedUser._id));
+    dispatch(subscribeToMessages());
+
+    return () => dispatch(unsubscribeFromMessages());
   }, [dispatch, selectedUser]);
 
 
