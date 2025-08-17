@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
+
+const { socket } = useSelector((state) => state.auth)
 
 const initialState = {
     messages: [],
@@ -63,10 +67,19 @@ const chatSlice = createSlice({
     initialState,
     reducers:{
         setChat: (state, action) => {},
-        
+
         setSelectedUser: (state, action) => {
             state.selectedUser = action.payload;
         },
+
+        subcribeToMessages: (state, action) => {
+            if(!state.selectedUser) return;
+            const sock = socket;
+
+            sock.on("newMessage", (newMessage) => {
+                state.messages = [...state.messages, newMessage]
+            })
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(getUsers.pending, (state) => {
