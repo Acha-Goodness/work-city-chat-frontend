@@ -8,12 +8,12 @@ const NoChatSelected = () => {
             <div className='flex justify-center gap-4 mb-4'>
                 <div className='relative'>
                     <div className='w-16 h-16 rounded-2xl bg-[white] flex items-center justify-center animate-bounce'>
-                        <RiMessage3Fill className='w-8 h-8 text-[black]'/>
+                        <RiMessage3Fill size={80} className='text-[black]'/>
                     </div>
                 </div>
             </div>
-            <h2 className='text-2xl font-bold'>Welcome to Work City</h2>
-            <p className='text-base-content/60'>Select a converstion from the sidebar to star chating</p>
+            <h2 className='text-2xl font-bold text-black'>Welcome to Work City</h2>
+            <p className='text-black'>Select a converstion from the sidebar to star chating</p>
         </div>
     </div>
   )
