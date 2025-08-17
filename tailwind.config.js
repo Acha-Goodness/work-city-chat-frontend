@@ -9,6 +9,12 @@ export default {
   theme: {
     extend: {},
   },
-    plugins: [require("tailwindcss-animate")],
+    plugins: [
+      require("tailwindcss-animate"), 
+      require("daisyui")
+    ],
+  daisyui: {
+    themes: ["light", "dark", "cupcake"], // 👈 optional: pick themes
+  },
 }
 
