@@ -79,6 +79,11 @@ const chatSlice = createSlice({
             sock.on("newMessage", (newMessage) => {
                 state.messages = [...state.messages, newMessage]
             })
+        },
+
+        unsubcribeToMessages: (state, action) => {
+            const sock = socket;
+            sock.off("newMessage"); 
         }
     },
     extraReducers: (builder) => {
@@ -102,5 +107,5 @@ const chatSlice = createSlice({
     }
 })
 
-export const { setSelectedUser } = chatSlice.actions;
+export const { setSelectedUser, subcribeToMessages, unsubcribeToMessages } = chatSlice.actions;
 export default chatSlice.reducer;
