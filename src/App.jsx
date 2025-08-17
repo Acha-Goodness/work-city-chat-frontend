@@ -23,9 +23,11 @@ import Profile from "./pages/main/profile-page";
 import { RiMessage3Fill } from "react-icons/ri";
 
 function App() {
-  const { user, isAuthenticated, isLoading} = useSelector( (state) => state.auth)
+  const { user, isAuthenticated, isLoading, onlineUsers} = useSelector((state) => state.auth)
   const dispatch = useDispatch();
   // const location = useLocation();
+
+  console.log("Online Users: ", onlineUsers)
 
   useEffect(() => {
     dispatch(checkAuth())
@@ -57,9 +59,16 @@ function App() {
         :  
       (
         <div className="flex flex-col overflow-hidden bg-white">
-          {/* COMMON COMPONENT */}
           <NavBar/>
           <Routes>
+              <Route
+                path="/"
+                element={
+                  <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                    <div />
+                  </CheckAuth>
+                }
+              />
               <Route path="/auth" element={
                 <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                   <AuthLayout/>

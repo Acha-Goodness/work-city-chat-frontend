@@ -13,14 +13,20 @@ const initialState = {
     socket: null
 };
 
-const connectSocket = () => {
-    const socket = io(BASE_URL);
-    socket.connect()
-}
+const connectSocket = ({ getState }) => {
+  const state = getState();
+  const socket = io(BASE_URL, {
+    withCredentials: true,
+    query: {
+        userId: state.user._id
+    }
+  });
 
-const disconnectSocket = () => {
-
-}
+  socket.on("getOnlineUsers", (userIds) => {
+    state.onlineUsers = userIds;
+  })
+  return socket;
+};
 
 export const registerUser = createAsyncThunk("/auth/register",
     async(formData, { rejectWithValue }) => {
@@ -43,7 +49,6 @@ export const verifyOtp = createAsyncThunk("/auth/verifyOtp",
             const response = await axios.post("http://localhost:3000/api/v1/users/userVerifyOTP", {otp}, {
                 withCredentials : true
             });
-            connectSocket();
             return response.data;
         }catch (err) {
             const message =
@@ -59,7 +64,6 @@ export const login = createAsyncThunk("/auth/login",
             const response = await axios.post("http://localhost:3000/api/v1/users/userLogin", formData, {
                 withCredentials : true
             });
-            connectSocket();
             return response.data
         }catch (err) {
             const message =
@@ -109,7 +113,6 @@ export const checkAuth = createAsyncThunk("/auth/checkauth",
                     // Expires : "0"
                 }
             });
-            connectSocket();
             return response.data
         }catch (err) {
             const message =
@@ -125,7 +128,6 @@ export const logout = createAsyncThunk("/auth/logout",
             const response = await axios.post("http://localhost:3000/api/v1/users/logout",{}, {
                 withCredentials : true
             });
-            disconnectSocket();
             return response.data
         }catch (err) {
             const message =
@@ -139,7 +141,18 @@ const authSlice = createSlice({
     name : "auth",
     initialState,
     reducer  : {
-        setUser: (state, action) => {}
+        setUser: (state, action) => {},
+
+        setSocket: (state, action) => {
+          state.socket = action.payload;
+        },
+
+       clearSocket: (state) => {
+        if (state.socket) {
+          state.socket.disconnect();
+          state.socket = null;
+        }
+       },
     },
     extraReducers: (builder) => {
         builder.addCase(registerUser.pending, (state) => {
@@ -159,6 +172,8 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = true;
+            const socket = connectSocket();
+            state.socket = socket;
         }).addCase(verifyOtp.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
@@ -170,6 +185,8 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = true;
+            const socket = connectSocket();
+            state.socket = socket;
         }).addCase(login.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
@@ -203,6 +220,8 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = action.payload.status;
+            // const socket = connectSocket();
+            // state.socket = socket;
         }).addCase(checkAuth.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
@@ -212,6 +231,10 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = null;
             state.isAuthenticated = false;
+            if (state.socket) {
+                state.socket.disconnect();
+                state.socket = null;
+            }
         })
     }
 })

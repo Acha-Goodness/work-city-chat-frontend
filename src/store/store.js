@@ -7,6 +7,10 @@ const store = configureStore({
         auth: authReducer,
         chat: chatReducer
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false, // 🚨 disables check
+    }),
 });
 
 export default store;

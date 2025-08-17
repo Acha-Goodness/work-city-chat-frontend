@@ -1,3 +1,3 @@
 # work-city-chat-frontend
 work city chat frontend
-TECHNOLOGIES: React.Js, Redux, Tailwind, Shadcn, 
+TECHNOLOGIES: React.Js, Redux, Tailwind, Shadcn, daisyUI, socket.io-client,
