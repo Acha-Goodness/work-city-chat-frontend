@@ -10,6 +10,8 @@ import { formatMessageTime } from '@/lib/utils';
 const ChatContainer = () => {
   const { messages, isMessagesLoading, selectedUser } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.auth)
+  console.log("User", user)
+   console.log("Messages", messages)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,12 +39,12 @@ const ChatContainer = () => {
                 messages.map((message) => (
                   <div 
                     key={message._id}
-                    className={`chat ${message.senderId === user._id ? "chat-end" : "chat-start"}`}
+                    className={`chat ${message.senderId === user.user._id ? "chat-end" : "chat-start"}`}
                   >
                     <div className='chat-image avatar'>
                       <div className='size-10 rounded-full border'>
                           <img
-                            src={message.senderId === user._id ? user.profilePic || profile : selectedUser.profilePic || profile}
+                            src={message.senderId === user.user._id ? user.user.profilePic || profile : selectedUser.profilePic || profile}
                             alt='profil pic'
                           />
                       </div>

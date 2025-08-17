@@ -45,14 +45,14 @@ const SideBar = () => {
                             />
                             {onlineUsers.includes(user._id) && (
                                 <span
-                                    className='absolute bottom-0 right-0 size-3 bg-[green]-500 rounded-full ring-2 ring-zinc-900'
+                                    className='absolute bottom-0 right-0 size-3 bg-[green] rounded-full ring-2 ring-zinc-900'
                                 />
                             )}
                         </div>
 
                         {/* User info - only visible on larger screens */}
                         <div className='hidden lg:block text-left min-w-0'>
-                            <div className='font-medium text-black truncate'>{user.name}</div>
+                            <div className={`font-medium truncate ${selectedUser?._id === user._id ? "text-white" : "text-black"}`}>{user.name}</div>
                             <div className='text-sm text-zinc-400'>
                                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                             </div>

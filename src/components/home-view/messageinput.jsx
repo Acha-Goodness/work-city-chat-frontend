@@ -96,10 +96,10 @@ const MessageInput = () => {
         </div>
         <button
           type="submit"
-          className="btn btn-sm btn-circle"
+          className="btn btn-sm btn-circle text-emerald-500"
           disabled={!text.trim() && !imagePreview}
         >
-          <IoIosSend size={22} />
+          <IoIosSend size={30} />
         </button>
       </form>
     </div>
