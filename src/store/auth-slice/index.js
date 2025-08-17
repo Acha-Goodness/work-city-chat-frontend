@@ -13,31 +13,6 @@ const initialState = {
     socket: null
 };
 
-const connectSocket = () => ({dispatch, getState}) => {
-  const state = getState()
-  console.log("STATE: ", state)
-//   if (!user?.user._id) return;
-
-  const socket = io(BASE_URL, {
-    withCredentials: true,
-    // query: { userId: user.user._id },
-  });
-
-  socket.on("getOnlineUsers", (userIds) => {
-    dispatch(setOnlineUsers(userIds));
-  });
-
-  return socket;
-};
-
-const disconnectSocket = () => (dispatch, getState) => {
-  const { socket } = getState().auth;
-  if (socket) {
-    socket.disconnect();
-    dispatch(clearSocket());
-  }
-};
-
 
 export const registerUser = createAsyncThunk("/auth/register",
     async(formData, { rejectWithValue }) => {
@@ -159,13 +134,6 @@ const authSlice = createSlice({
         setOnlineUsers: (state, action) => {
           state.onlineUsers = action.payload;
         },
-
-       clearSocket: (state) => {
-        if (state.socket) {
-          state.socket.disconnect();
-          state.socket = null;
-        }
-       },
     },
     extraReducers: (builder) => {
         builder.addCase(registerUser.pending, (state) => {
@@ -185,8 +153,6 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = true;
-            const socket = connectSocket();
-            state.socket = socket;
         }).addCase(verifyOtp.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
@@ -198,8 +164,6 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = true;
-            const socket = connectSocket();
-            state.socket = socket;
         }).addCase(login.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
@@ -233,8 +197,6 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = action.payload;
             state.isAuthenticated = action.payload.status;
-            const socket = connectSocket();
-            state.socket = socket;
         }).addCase(checkAuth.rejected, (state, action) => {
             state.isLoading = false;
             state.user = null;
@@ -244,11 +206,40 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.user = null;
             state.isAuthenticated = false;
-            const socket = disconnectSocket();
-            state.socket = socket;
         })
     }
 })
 
-export const { setUser } = authSlice.actions;
+export const { setOnlineUsers, setSocket, clearSocket } = authSlice.actions;
 export default authSlice.reducer;
+
+export const connectSocket = createAsyncThunk(
+  "auth/connectSocket",
+  async (_, { getState, dispatch }) => {
+    const state = getState().auth;
+
+    const socket = io(BASE_URL, {   
+      withCredentials: true,
+      query: { userId: state.user?.user._id }
+    });
+
+    socket.on("getOnlineUsers", (userIds) => {
+      dispatch(setOnlineUsers(userIds));
+    });
+
+    dispatch(setSocket());
+
+     return socket;
+  }
+);
+
+export const disconnectSocket = createAsyncThunk(
+  "auth/disconnectSocket",
+  async (_, { getState, dispatch }) => {
+    const state = getState().auth;
+    if (state.socket) {
+      state.socket.disconnect();
+      dispatch(setSocket(null));
+    }
+  }
+);

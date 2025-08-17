@@ -63,6 +63,7 @@ const chatSlice = createSlice({
     initialState,
     reducers:{
         setChat: (state, action) => {},
+        
         setSelectedUser: (state, action) => {
             state.selectedUser = action.payload;
         },

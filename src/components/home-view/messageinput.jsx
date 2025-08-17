@@ -40,7 +40,7 @@ const MessageInput = () => {
     dispatch(sendMessages({text: text.trim(), image: imagePreview}))
     .then((res) => {
       dispatch(getMessages(selectedUser._id));
-      console.log(res)
+      // console.log(res)
       setText("");
       setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";

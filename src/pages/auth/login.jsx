@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { login } from "@/store/auth-slice";
+import { connectSocket, login } from "@/store/auth-slice";
 import { toast } from "sonner";
 
 const initialState = {
@@ -23,6 +23,7 @@ const AuthLogin = () => {
         .then((res) => {
             if(res?.payload?.status === "success"){
                 toast(res.payload.message)
+                dispatch(connectSocket());
             }else if(res?.error?.message === "Rejected"){
                 throw new Error(res.payload || "Login failed");
             }else{

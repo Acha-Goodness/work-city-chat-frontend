@@ -11,7 +11,7 @@ import NotFound from "./pages/not-found";
 import CheckAuth from "./components/common/check-auth";
 import UnauthPage from "./pages/unauth-page";
 import { useSelector, useDispatch } from "react-redux";
-import { checkAuth } from "./store/auth-slice";
+import { checkAuth, connectSocket } from "./store/auth-slice";
 import { toast } from "sonner";
 import { MoonLoader } from 'react-spinners';
 import { Skeleton } from "@/components/ui/skeleton"
@@ -34,6 +34,7 @@ function App() {
     .then((res) => {
       if(res?.payload?.status === "success"){
         toast(res.payload.message)
+        dispatch(connectSocket())
       }else if(res?.error?.message === "Rejected"){
         throw new Error(res.payload || "Authentication failed");
       }else{

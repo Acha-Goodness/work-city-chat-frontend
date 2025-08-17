@@ -4,7 +4,7 @@ import { verifyOtpControls } from '@/components/config';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
-import { verifyOtp } from '@/store/auth-slice';
+import { connectSocket, verifyOtp } from '@/store/auth-slice';
 import { toast } from 'sonner';
 
 
@@ -24,6 +24,7 @@ const onSubmit = (e) => {
         console.log(res);  
         if(res?.payload?.status === "success"){
             toast(res?.payload?.message);
+            dispatch(connectSocket());
         }else if(res?.error?.message === "Rejected"){
             throw new Error(res.payload || "Verification failed");
         }else{

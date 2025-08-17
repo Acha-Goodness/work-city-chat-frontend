@@ -1,4 +1,4 @@
-import { logout } from '@/store/auth-slice';
+import { disconnectSocket, logout } from '@/store/auth-slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { IoIosSettings } from "react-icons/io";
@@ -11,7 +11,10 @@ const NavBar = () => {
   const dispatch = useDispatch()
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logout())
+    .then((res) => {
+       dispatch(disconnectSocket());
+    });
   }
 
   return (
