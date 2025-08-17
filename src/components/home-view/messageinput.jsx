@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
-import { sendMessages } from '@/store/chat-slice';
+import { getMessages, sendMessages } from '@/store/chat-slice';
 import { RxCross2 } from "react-icons/rx";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IoIosSend } from "react-icons/io";
 import { MdImage } from "react-icons/md";
 
@@ -10,6 +10,8 @@ const MessageInput = () => {
   const [ text, setText ] = useState("");
   const [ imagePreview, setImagePreview ] = useState(null);
   const fileInputRef = useRef(null)
+
+   const { selectedUser } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
 
   const handleImageChange = (e) => {
@@ -37,6 +39,7 @@ const MessageInput = () => {
 
     dispatch(sendMessages({text: text.trim(), image: imagePreview}))
     .then((res) => {
+      dispatch(getMessages(selectedUser._id));
       console.log(res)
       setText("");
       setImagePreview(null);

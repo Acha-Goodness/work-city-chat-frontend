@@ -20,6 +20,7 @@ import HomeLayout from "./components/home-view/layout";
 import Home from "./pages/main/home";
 import NavBar from "./components/Nav/navbar";
 import Profile from "./pages/main/profile-page";
+import { RiMessage3Fill } from "react-icons/ri";
 
 function App() {
   const { user, isAuthenticated, isLoading} = useSelector( (state) => state.auth)
@@ -49,7 +50,7 @@ function App() {
       (
         <div className="h-[100vh] flex justify-center items-center">
             <Skeleton className="w-[250px]">
-              <img src={logo} alt="logo"/>
+                  <RiMessage3Fill size={100} className="text-white"/>
             </Skeleton>
         </div> 
       )
