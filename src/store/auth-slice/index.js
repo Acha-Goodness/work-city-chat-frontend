@@ -227,7 +227,7 @@ export const connectSocket = createAsyncThunk(
       dispatch(setOnlineUsers(userIds));
     });
 
-    dispatch(setSocket());
+    dispatch(setSocket(socket));
 
      return socket;
   }

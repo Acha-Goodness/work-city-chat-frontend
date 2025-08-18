@@ -96,17 +96,18 @@ const chatSlice = createSlice({
     }
 })
 
-export const { setSelectedUser,  addMessage } = chatSlice.actions;
+export const { setSelectedUser, addMessage } = chatSlice.actions;
 export default chatSlice.reducer;
 
 export const subscribeToMessages = createAsyncThunk(
   "chat/subscribeToMessages",
   async (_, { getState, dispatch }) => {
     const socket = getState().auth.socket;
+    
     const selectedUser = getState().chat.selectedUser;
-
+    
     if (!socket || !selectedUser) return;
-
+    
     socket.on("newMessage", (newMessage) => {
       dispatch(addMessage(newMessage));
     });

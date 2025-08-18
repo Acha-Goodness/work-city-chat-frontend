@@ -1,5 +1,5 @@
 import { getMessages, subscribeToMessages, unsubscribeFromMessages } from '@/store/chat-slice';
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import ChatHeader from './chatheader';
 import MessageInput from './messageinput';
@@ -10,6 +10,7 @@ import { formatMessageTime } from '@/lib/utils';
 const ChatContainer = () => {
   const { messages, isMessagesLoading, selectedUser } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.auth)
+  const messageEndRef = useRef(null);
 
   const dispatch = useDispatch();
   
@@ -19,7 +20,13 @@ const ChatContainer = () => {
     dispatch(subscribeToMessages());
 
     return () => dispatch(unsubscribeFromMessages());
-  }, [dispatch, selectedUser]);
+  }, [selectedUser._id, subscribeToMessages, unsubscribeFromMessages]);
+
+  useEffect(() => {
+    if(messageEndRef.current && messages){
+      messageEndRef.current.scrollIntoView({behavior: "smooth"})
+    }
+  },[messages])
 
 
   return (
@@ -39,10 +46,11 @@ const ChatContainer = () => {
             <ChatHeader/>
             <div className='flex-1 overflow-y-auto p-4 space-y-4'>
               {
-                messages.map((message) => (
+                messages.map((message, idx) => (
                   <div 
-                    key={message._id}
+                    key={idx}
                     className={`chat ${message.senderId === user.user._id ? "chat-end" : "chat-start"}`}
+                    ref={messageEndRef}
                   >
                     <div className='chat-image avatar'>
                       <div className='size-10 rounded-full border'>
